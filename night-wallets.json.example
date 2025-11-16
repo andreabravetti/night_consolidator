@@ -1,0 +1,19 @@
+{
+    "destination": "addr1..YOUR_ADDRESS_HERE..",
+    "sources": [
+        {
+            "comment": "this is an example for ADA-Markets/midnight_fetcher_bot_public multi wallet derivation",
+            "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon diesel",
+            "range_type": "wallet",
+            "range_min": 0,
+            "range_max": 199
+        },
+        {
+            "comment": "this is an example for single wallet, multi address derivation",
+            "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon trouble",
+            "range_type": "address",
+            "range_min": 0,
+            "range_max": 10
+        }
+    ]
+}
