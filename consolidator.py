@@ -64,58 +64,59 @@ if __name__ == "__main__":
     with open("night-wallets.json", "r") as fin:
         WALLETS = json.loads(fin.read())
     # Initial print
+    dadd = WALLETS['destination']
+    smsg = f"Assign accumulated Scavenger rights to: {dadd}"
     print(f"This is night-consolidator {'.'.join([str(v) for v in VERSION])}")
-    print(
-        f"Your destination address is {short_address(WALLETS['destination'])}")
+    print(f"Your destination address is {short_address(dadd)}")
     # Main loop
     for i, w in enumerate(WALLETS["sources"]):
-        print(f" Elaborating source {i} ({w['comment']})")
+        print(f"--  ########################################")
+        print(f"--  Elaborating source {i} ({w['comment']})")
+        print(f"--  ########################################")
         if not w.get("enabled", True):
-            print("  This source is disabled in config, skip.")
+            print("--  This source is disabled in config, skip.")
             continue
-        print(f"  Derivation type is {w['range_type']}")
+        print(f"--  Derivation type is {w['range_type']}")
         dmin = w['range_min']
         dmax = w['range_max']
         if dmin > dmax:
-            print(f" ERROR: range_min can't be grater than range_max")
+            print(f"ERROR: range_min can't be grater than range_max")
             sys.exit(1)
         if dmin == dmax:
-            print(f"  Single addr/wallet with index equal to {dmin}")
+            print(f"--  Single addr/wallet with index equal to {dmin}")
         else:
-            print(f"  Multiple addr/wallet in range {dmin}...{dmax}")
+            print(f"--  Multiple addr/wallet in range {dmin}...{dmax}")
         derivation_range = list(range(dmin, dmax+1))
         # Wallet loop
         for index in derivation_range:
-            print(f"  Running at index {index}")
+            print(f"--  Running at index {index}")
             try:
                 wd = wallet(w['mnemonic'], DERIVATION_PATH[w['range_type']], index)
-                print(f"   Derivation path is {wd.path}")
+                print(f"--   Derivation path is {wd.path}")
             except ValueError as e:
-                print(f"   ERROR: {e}")
+                print(f"ERROR: {e}")
                 sys.exit(1)
-            source_address = wd.get_address()
-            print(f"   Source address: {short_address(source_address)}")
+            sadd = wd.get_address()
+            print(f"--   Source address: {short_address(sadd)}")
             try:
                 session = requests.Session()
-                dadd = WALLETS['destination']
-                sadd = source_address
-                ssig = wd.get_signature(f"Assign accumulated Scavenger rights to: {dadd}")
+                ssig = wd.get_signature(smsg)
                 durl = f"{BASE_URL}/donate_to/{dadd}/{sadd}/{ssig}"
                 donation = session.post(durl, headers=HTTP_HEADERS, json={})
             except Exception as e:
-                print(f"   ERROR: {e}")
+                print(f"ERROR: {e}")
                 sys.exit(1)
             response = donation.json()
             not_registered = response.get('message', '').endswith("is not registered")
             already_done = response.get('error', '') == 'Conflict'
             is_success = response.get('status', '') == 'success'
             if not_registered:
-                print(f"<  Response: skip, not registered")
+                print(f"??   Response: skip, not registered")
             elif already_done:
-                print(f">  Response: ok, alredy done")
+                print(f"OK   Response: ok, alredy done")
             elif not is_success:
-                print(f"   ERROR:\n{response}")
+                print(f"ERROR:\n{response}")
                 sys.exit(1)
             else:
-                print(f"X  Response: success")
-            time.sleep(1)
+                print(f"OK   Response: success")
+            time.sleep(0.1)
