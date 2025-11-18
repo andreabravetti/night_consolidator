@@ -30,10 +30,12 @@ def short_address(address: str) -> str:
 
 
 class wallet():
-    def __init__(self, mnemonic: str, derivation_path: str, index: int):
+    def __init__(self, mnemonic: str, range_type: str, index: int):
         hdwallet = HDWallet.from_mnemonic(mnemonic)
+        derivation_path = DERIVATION_PATH[range_type]
+        sindex = index if range_type == "wallet" else 0
         self.path = derivation_path.format(x=0, index=index)
-        self.stake_path = derivation_path.format(x=2, index=index)
+        self.stake_path = derivation_path.format(x=2, index=sindex)
         self.wallet = hdwallet.derive_from_path(self.path)
         self.stake_wallet = hdwallet.derive_from_path(self.stake_path)
 
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         for index in derivation_range:
             print(f"--  Running at index {index}")
             try:
-                wd = wallet(w['mnemonic'], DERIVATION_PATH[w['range_type']], index)
+                wd = wallet(w['mnemonic'], w['range_type'], index)
                 print(f"--   Derivation path is {wd.path}")
             except ValueError as e:
                 print(f"ERROR: {e}")
