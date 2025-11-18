@@ -72,6 +72,7 @@ if __name__ == "__main__":
     print(f"Your destination address is {short_address(dadd)}")
     # Main loop
     for i, w in enumerate(WALLETS["sources"]):
+        print()
         print(f"--  ########################################")
         print(f"--  Elaborating source {i} ({w['comment']})")
         print(f"--  ########################################")
