@@ -25,6 +25,8 @@ HTTP_HEADERS = {
 
 WALLETS = {}
 
+GET_ALLOCATION = False
+
 def short_address(address: str) -> str:
     return f"{address[0:11]}...{address[-6:]}"
 
@@ -78,6 +80,7 @@ if __name__ == "__main__":
     smsg = f"Assign accumulated Scavenger rights to: {dadd}"
     print(f"This is night-consolidator {'.'.join([str(v) for v in VERSION])}")
     print(f"Your destination address is {short_address(dadd)}")
+    total_night = 0
     # Main loop
     for i, w in enumerate(WALLETS["sources"]):
         print()
@@ -100,15 +103,14 @@ if __name__ == "__main__":
         derivation_range = list(range(dmin, dmax+1))
         # Wallet loop
         for index in derivation_range:
-            print(f"--  Running at index {index}")
             try:
                 wd = wallet(w['mnemonic'], w['range_type'], index)
-                print(f"--   Derivation path is {wd.path}")
             except ValueError as e:
                 print(f"ERROR: {e}")
                 sys.exit(1)
             sadd = wd.get_address()
-            print(f"--   Source address: {short_address(sadd)}")
+            sred = short_address(sadd)
+            print(f"--  Running at index {index}: {wd.path} {sred}")
             try:
                 session = requests.Session()
                 ssig = wd.get_signature(smsg)
@@ -124,10 +126,26 @@ if __name__ == "__main__":
             if not_registered:
                 print(f"??   Response: skip, not registered")
             elif already_done:
-                print(f"OK   Response: ok, alredy done")
+                skip_remaining = index == derivation_range[0]
+                if GET_ALLOCATION:
+                    this_night = get_night_allocation(sadd)
+                    total_night += this_night
+                    print(f"OK   Response: ok, alredy done {this_night/1000000:.2f}")
+                else:
+                    print(f"OK   Response: ok, alredy done")
             elif not is_success:
                 print(f"ERROR:\n{response}")
                 sys.exit(1)
             else:
-                print(f"OK   Response: success")
-            time.sleep(0.1)
+                if GET_ALLOCATION:
+                    this_night = get_night_allocation(sadd)
+                    total_night += this_night
+                    print(f"OK   Response: success {this_night/1000000:.2f}")
+                else:
+                    print(f"OK   Response: success")
+            time.sleep(1)
+            if skip_remaining:
+                pass
+                #break
+    if GET_ALLOCATION:
+        print(f"Total night {total_night/1000000:.2f}")
