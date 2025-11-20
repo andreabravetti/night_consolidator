@@ -26,7 +26,7 @@ HTTP_HEADERS = {
 WALLETS = {}
 
 def short_address(address: str) -> str:
-    return f"{address[0:13]}...{address[-8:]}"
+    return f"{address[0:11]}...{address[-6:]}"
 
 
 class wallet():
