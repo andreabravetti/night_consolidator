@@ -74,7 +74,11 @@ if __name__ == "__main__":
         sys.exit(1)
     # Read the wallets configurations
     with open("night-wallets.json", "r") as fin:
-        WALLETS = json.loads(fin.read())
+        try:
+            WALLETS = json.loads(fin.read())
+        except Exception as e:
+            print(f"Invalid night-wallets.json: {e}")
+            sys.exit(1)
     # Initial print
     dadd = WALLETS['destination']
     smsg = f"Assign accumulated Scavenger rights to: {dadd}"
