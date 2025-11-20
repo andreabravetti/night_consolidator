@@ -72,6 +72,11 @@ GET_ALLOCATION=1 python consolidator.py
 
 With this variable the consolidator will print yout NIGHT balance for each address, and a total in the end.
 
+Please note:
+
+- This feature is not part of the official API and it may fail.
+- You will always see the balance from regular mining, not donated funds.
+
 
 ## NOTE
 
