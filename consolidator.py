@@ -25,7 +25,7 @@ HTTP_HEADERS = {
 
 WALLETS = {}
 
-GET_ALLOCATION = False
+GET_ALLOCATION = os.environ.get("GET_ALLOCATION", "no").lower() in ["yes", "true", "1"]
 
 def short_address(address: str) -> str:
     return f"{address[0:11]}...{address[-6:]}"

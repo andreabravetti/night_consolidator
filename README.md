@@ -22,6 +22,16 @@ Compile your `night-wallets.json` following `night-wallets.json.example`
 python consolidator.py
 ```
 
+## Get $NIGHT allocation
+
+If you want to view your $NIGHT allocation you can try this experimental feature setting the environment variable GET_ALLOCATION to 1, yes or true:
+
+```
+GET_ALLOCATION=1 python consolidator.py
+```
+
+With this variable the consolidator will print yout NIGHT balance for each address, and a total in the end.
+
 ## NOTE
 
 You need to run it only once:
