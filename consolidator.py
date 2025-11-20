@@ -28,6 +28,14 @@ WALLETS = {}
 def short_address(address: str) -> str:
     return f"{address[0:11]}...{address[-6:]}"
 
+def get_night_allocation(address: str) -> int:
+    if not GET_ALLOCATION:
+        return 0
+    session = requests.Session()
+    url = f"https://sm.midnight.gd/api/statistics/{address}"
+    allocation = session.get(url, headers=HTTP_HEADERS)
+    allocation.raise_for_status()
+    return allocation.json()["local"]["night_allocation"]
 
 class wallet():
     def __init__(self, mnemonic: str, range_type: str, index: int):
