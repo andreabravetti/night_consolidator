@@ -28,7 +28,7 @@ Please take care of these parameters:
 
 Parameter `range_type` define the derivation path the software will use:
 
-- `wallet`: Use `m/1852'/1815'/{i}'/{x}/0` to produce n different wallets with different stake key, like you can find for example in the ADA-Markets/midnight_fetcher_bot_public and other popular API miners.
+- `wallet`: Use `m/1852'/1815'/{i}'/{x}/0` to produce n different wallets with different stake key, like you can find for example in the [midnight_fetcher_bot_public](https://github.com/ADA-Markets/midnight_fetcher_bot_public) and other popular API miners.
 
 - `address`: Use `m/1852'/1815'/0'/{x}/{i}` to produce n different addresses with the same stake key, like you can get generating some nre addresses in Yoroi or other Cardano wallets.
 
